@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-sm-8 col-md-6">
+    <div class="thumbnail">
+      <div class="caption">
+        <h3>{{card.name}}</h3>
+        <p>{{card.content}}</p>
+        <p class="text-right">
+          <a href="{{ url_for('editCard', company_id=card.company_id, card_id=card.id) }}" class="btn btn-primary" role="button">Edit</a>
+          <a href="{{ url_for('deleteCard', company_id=card.company_id, card_id=card.id) }}" class="btn btn-default" role="button">Delete</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

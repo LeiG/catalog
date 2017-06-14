@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+
+  <h2 class="page-header">Login to TechView</h2>
+
+  <p>Login is super easy with your social accounts</p>
+
+  <div id="gLoginButton">
+    <span class="g-signin"
+      data-scope="openid"
+      data-clientid="529359323394-5e1ev1hbuf2p1qh912g2djekbftpnf42.apps.googleusercontent.com"
+      data-redirecturi="postmessage"
+      data-accesstype="offline"
+      data-cookiepolicy="single_host_origin"
+      data-callback="signInCallback"
+      data-approvalprompt="force">
+    </span>
+  </div>
+
+  <div id="fbLoginButton">
+    <fb:login-button size="large" scope="public_profile,email" onlogin="checkLoginState();">
+    </fb:login-button>
+  </div>
+
+  <div id="error">{{error}}</div>
+
+  <script>
+   function signInCallback(authResult) {
+     if (authResult['code']) {
+       // Send the one-time-code to the server
+       $.ajax({
+         type: 'POST',
+         url: '/gconnect?state={{STATE}}',
+         processData: false,
+         contentType: 'application/octet-stream; charset=utf-8',
+         data: authResult['code'],
+         success: function(result) {
+           if (result) {
+             $('#error')
+               .html('Login successfully. Redirecting...')
+             setTimeout(function() {
+               window.location.href = "/companies";
+             }, 4000);
+           } else if (authResult['error']) {
+             console.log('There was an error' + authResult['error']);
+           } else {
+             $('#error')
+               .html('Failed to make a server-side call. Check your configuration and console.');
+           }
+         }
+       });
+     }
+   }
+  </script>
+
+  <script>
+   function statusChangeCallback(response) {
+     console.log('statusChangeCallback');
+     console.log(response);
+     if (response.status === 'connected') {
+       // Logged into your app and Facebook.
+       sendTokenToServer();
+     }
+   }
+
+   function checkLoginState() {
+     FB.getLoginStatus(function(response) {
+       statusChangeCallback(response);
+     });
+   }
+
+   window.fbAsyncInit = function() {
+     FB.init({
+       appId      : '443845559284873',
+       cookie     : true,  // enable cookies to allow the server to access the session
+       xfbml      : true,  // parse social plugins on this page
+       version    : 'v2.8' // use graph api version 2.8
+     });
+
+     // Now that we've initialized the JavaScript SDK, we call
+     // FB.getLoginStatus().  This function gets the state of the
+     // person visiting this page and can return one of three states to
+     // the callback you provide.  They can be:
+     //
+     // 1. Logged into your app ('connected')
+     // 2. Logged into Facebook, but not your app ('not_authorized')
+     // 3. Not logged into Facebook and can't tell if they are logged into
+     //    your app or not.
+     //
+     // These three cases are handled in the callback function.
+
+     FB.getLoginStatus(function(response) {
+       statusChangeCallback(response);
+     });
+
+   };
+
+   // Load the SDK asynchronously
+   (function(d, s, id) {
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) return;
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+   // Here we run a very simple test of the Graph API after login is
+   // successful.  See statusChangeCallback() for when this call is made.
+   function sendTokenToServer() {
+     var access_token = FB.getAuthResponse()['accessToken']
+     console.log('Welcome!  Fetching your information.... ');
+     FB.api('/me', function(response) {
+       console.log('Successful login for: ' + response.name);
+       $('fbLoginButton').attr('style', 'display: none');
+       // Send the one-time-code to the server
+       $.ajax({
+         type: 'POST',
+         url: '/fbconnect?state={{STATE}}',
+         procesData: false,
+         data: access_token,
+         contentType: 'application/octet-stream; charset=utf-8',
+         success: function(result) {
+           if (result) {
+             $('#error')
+               .html('Login successfully. Redirecting...')
+             setTimeout(function() {
+               window.location.href = "/companies";
+             }, 4000);
+           }
+           else {
+             $('#error')
+               .html('Failed to make a server-side call. Check your configuration and console.');
+           }
+         }
+       });
+     });
+   }
+  </script>
+
+{% endblock %}

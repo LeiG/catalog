@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h3>Are you sure to delete this card?</h3>
+
+  <div class="col-sm-8 col-md-6">
+    <div class="row">
+      <div class="thumbnail">
+        <div class="caption">
+          <h3>{{card.name}}</h3>
+          <p>{{card.content}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <p class="text-right">
+        <form action="{{ url_for('deleteCard', company_id=card.company_id, card_id=card.id) }}" method="post" id="deleteCardRow">
+          <button form="deleteCardRow" name="deleteCard" value="deleteCard" class="btn btn-primary">Delete</button>
+        </form>
+        <a href="/companies/{{card.company_id}}" class="btn btn-default" role="button">Cancel</a>
+      </p>
+    </div>
+  </div>
+
+  <div id="error">{{error}}</div>
+
+{% endblock %}

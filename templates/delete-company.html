@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h3>Are you sure to delete this company?</h3>
+
+  <div class="col-sm-8 col-md-6">
+    <div class="row">
+      <div class="thumbnail">
+        <div class="caption">
+          <h3>{{company.name}}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <p class="text-right">
+        <form action="{{ url_for('deleteCompany', company_id=company.id) }}" method="post" id="deleteCompanyRow">
+          <button type="submit" form="deleteCompanyRow" name="deleteCompany" value="deleteCompany" class="btn btn-primary">Delete</button>
+        </form>
+        <a href="/companies" class="btn btn-default" role="button">Cancel</a>
+      </p>
+    </div>
+
+    <div id="error">{{error}}</div>
+  </div>
+
+
+{% endblock %}

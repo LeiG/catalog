@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <a href="/companies/{{company.id}}/cards/new" class="pull-right btn btn-default" role="button">Add Card</a>
+
+  <h2 class="page-header">{{company.name}}</h2>
+
+  <ul class="nav">
+  {% for card in company_cards %}
+    <li>
+      {% include "card.html" %}
+    </li>
+  {% endfor %}
+  </ul>
+
+{% endblock %}
