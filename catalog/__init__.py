@@ -25,7 +25,7 @@ CLIENT_ID = json.loads(
 )['web']['client_id']
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'super secret key'
+# app.config['SECRET_KEY'] = 'super secret key'
 
 engine = create_engine('sqlite:///techview.db')
 Base.metadata.bind = engine
@@ -629,5 +629,4 @@ def deleteCard(company_id, card_id):
 
 
 if __name__ == "__main__":
-    app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run()
