@@ -6,6 +6,7 @@ import json
 import requests
 import random
 import string
+import sys
 
 from flask import\
     Flask, jsonify, make_response, redirect, request, \
@@ -21,11 +22,11 @@ from database_setup import Base, Company, Card
 
 
 CLIENT_ID = json.loads(
-    open('g_client_secrets.json', 'r').read()
+    open(sys.path[0] + 'g_client_secrets.json', 'r').read()
 )['web']['client_id']
 
 app = Flask(__name__)
-# app.config['SECRET_KEY'] = 'super secret key'
+app.config['SECRET_KEY'] = 'super secret key'
 
 engine = create_engine('sqlite:///techview.db')
 Base.metadata.bind = engine
@@ -150,7 +151,7 @@ def fbconnect():
 
     # Exchange client token for long-lived server-side token
     app_id = json.loads(
-        open('fb_client_secrets.json', 'r').read()
+        open(sys.path[0] + 'fb_client_secrets.json', 'r').read()
     )['web']['app_id']
     app_secret = json.loads(
         open('fb_client_secrets.json', 'r').read()
