@@ -7,14 +7,44 @@
 
 Its backend is built with python Flask framework and the frontend is using Bootstrap framework.
 
-## Setup
+## Information
 
-To get the app runs locally, you need to follow these instructions
+IP address: `52.34.113.93`
 
-1. Setup the database
-```$python database_setup.py```
+SSH port: `2200`
 
-2. Run the application locally
-```$python application.py```
+SSH key: `/home/grader/.ssh/authorized_keys`
 
-3. Open browser at `http://localhost:5000`
+URL: `http://52.34.113.93/`
+
+Software installed
+* Apache2
+* Postgresql
+* Python2
+
+## Configuration
+
+```
+<VirtualHost *:80>
+        ServerName catalog
+        ServerAdmin lei@commitlogs.com
+
+        WSGIDaemonProcess webtool user=www-data group=www-data threads=5 home=/var/www/catalog/
+        WSGIScriptAlias / /var/www/catalog/catalog.wsgi
+        <Directory /var/www/catalog/catalog/>
+                WSGIProcessGroup catalog
+                WSGIApplicationGroup %{GLOBAL}
+                WSGIScriptReloading On
+                Order allow,deny
+                Allow from all
+        </Directory>
+        Alias /static /var/www/catalog/catalog/static
+        <Directory /var/www/catalog/catalog/static/>
+                Order allow,deny
+                Allow from all
+        </Directory>
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        LogLevel info
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
