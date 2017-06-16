@@ -72,7 +72,7 @@ class Card(Base):
 
 
 def init_db():
-    engine = create_engine('postgresql://catalog@localhost/techview')
+    engine = create_engine('postgresql://catalog:catalog@localhost/techview')
 
     Base.metadata.create_all(engine)
 

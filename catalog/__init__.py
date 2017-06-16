@@ -28,7 +28,7 @@ CLIENT_ID = json.loads(
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'super secret key'
 
-engine = create_engine('sqlite:///techview.db')
+engine = create_engine('postgresql://catalog:catalog@localhost/techview')
 Base.metadata.bind = engine
 
 db_session = sessionmaker(bind=engine)()
